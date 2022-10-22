@@ -1,0 +1,87 @@
+command /tpa [<player>]:
+	trigger:
+		if arg 1 is not set:
+			send ""
+			send "     &c&lBłąd."
+			send "     &7Wpisz nick gracza!&c&l"
+			send ""
+			stop
+		delete {tpa::%player%}
+		delete {tpa::ocz::%player-arg%}
+		set {tpa::%player%} to "%player-arg%"
+		set {tpa::ocz::%player-arg%} to "%player%"
+		send ""
+		send "     &a&lWysłano zapytanie o teleport!" to player
+		send "     &f%player-arg% &7otrzymał powiadomienie!"
+		send ""
+		send "" to player-arg
+		send "     &a&lOtrzymano prośbę o teleport!" to player-arg
+		send "     &f%player%&7 chce się do ciebie teleportować aby " to player-arg
+		send "     &7zaakceptować napisz &f/tpaccept&7" to player-arg
+		send "" to player-arg
+		stop
+		
+
+on quit:
+	delete {tpa::ocz::%player%}
+	delete {tpa::%player%}
+
+command /tpdeny:
+	trigger:
+		if {tpa::ocz::%player%} is set:
+			set {_} to "%{tpa::ocz::%player%}%" parsed as player
+			delete {tpa::ocz::%player%}
+			delete {tpa::%{_}%}
+			send "" to {_}
+			send "     &c&lBłąd." to {_}
+			send "     &7Wpisz nick gracza!&c&l" to {_}
+			send "" to {_}
+			send " &cNie zaakceptowales prosby gracza &7%{tpa::ocz::%player%}% &c!" to player
+		else:
+			send ""
+			send "     &c&lBłąd."
+			send "     &7Nie otrzymałeś zapytania!&c&l"
+			send ""
+
+command /tpaccept:
+	trigger:
+		if {tpa::ocz::%player%} is set:
+			set {_} to "%{tpa::ocz::%player%}%" parsed as player
+			send "" to {_}
+			send "     &a&lTeleportacja" to {_}
+			send "     &7Twoja prośba została zaakceptowana!" to {_}
+			send "" to {_}
+			send title "&2&lteleportacja" with subtitle "&7za 10 sekund" to {_}
+			wait 1 seconds
+			send title "&2&lteleportacja" with subtitle "&7za 9 sekund" to {_}
+			wait 1 seconds
+			send title "&a&lteleportacja" with subtitle "&7za 8 sekund" to {_}
+			wait 1 seconds
+			send title "&a&lteleportacja" with subtitle "&7za 7 sekund" to {_}
+			wait 1 seconds
+			send title "&e&lteleportacja" with subtitle "&7za 6 sekund" to {_}
+			wait 1 seconds
+			send title "&e&lteleportacja" with subtitle "&7za 5 sekund"  to {_}
+			wait 1 seconds
+			send title "&6&lteleportacja" with subtitle "&7za 6 sekund"  to {_}
+			wait 1 seconds
+			send title "&6&lteleportacja" with subtitle "&7za 5 sekund"  to {_}
+			wait 1 seconds
+			send title "&c&lteleportacja" with subtitle "&7za 4 sekund"  to {_}
+			wait 1 seconds
+			send title "&c&lteleportacja" with subtitle "&7za 3 sekund"  to {_}
+			wait 1 seconds
+			send title "&4&lteleportacja" with subtitle "&7za 2 sekund"  to {_}
+			wait 1 seconds
+			send title "&4&lteleportacja" with subtitle "&7za 1 sekund"  to {_}
+			wait 1 seconds
+			
+			delete {tpa::%{_}%}
+			delete {tpa::ocz::%player%}
+			teleport {_} to player
+		else:
+			send ""
+			send "     &c&lBłąd."
+			send "     &7Nie otrzymałeś zapytania!&c&l"
+			send ""
+			
